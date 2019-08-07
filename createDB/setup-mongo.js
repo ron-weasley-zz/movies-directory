@@ -50,55 +50,55 @@ var updateDoc = async (data) => {
 // For movies.csv file [setting up database for the first time]
 //
 // //Reading movies CSV file in Stream
-var CSVstream = fs.createReadStream("./dataset/movies.csv");
+// var CSVstream = fs.createReadStream("./dataset/movies.csv");
 
-//Writing data to database
-var year = " ";
-csv.fromStream(CSVstream, {
-        headers: true
-    })
-    .on("data", function (data) {
-        data.movieId = data.movieId * 1;
-        if (data.title.substr(-1) === ")" && data.title.substr(-6, 1) === "(") {
-            year = data.title.slice(-5, -1);
-            data.title = data.title.slice(0, -7);
-        } else {
-            year = "NA";
-        }
-        if (data.genres === "(no genres listed)") {
-            data.genres = ["NA"];
-        } else {
-            data.genres = data.genres.split("|");
-        }
-        var writeObj = new Object({
-            movieID: data.movieId,
-            movieName: data.title,
-            movieYear: year,
-            movieGenre: data.genres
-        });
-        // console.log(data);
-        createDOC(writeObj);
-    })
-    .on("end", function () {
-        console.log("----Movies ID, Movies Name, Movies Year and Movies Genre written!----");
-    });
-
-
-// 
-// For tags.csv file [updating tags in documents in database]
-//
-//Reading tags CSV file in Stream
-// var CSVstream = fs.createReadStream("./dataset/tags.csv");
-
-
-// // //Writing data to database
-// csv.parseStream(CSVstream, {
+// //Writing data to database
+// var year = " ";
+// csv.fromStream(CSVstream, {
 //         headers: true
 //     })
 //     .on("data", function (data) {
 //         data.movieId = data.movieId * 1;
-//         updateDoc(data);
+//         if (data.title.substr(-1) === ")" && data.title.substr(-6, 1) === "(") {
+//             year = data.title.slice(-5, -1);
+//             data.title = data.title.slice(0, -7);
+//         } else {
+//             year = "NA";
+//         }
+//         if (data.genres === "(no genres listed)") {
+//             data.genres = ["NA"];
+//         } else {
+//             data.genres = data.genres.split("|");
+//         }
+//         var writeObj = new Object({
+//             movieID: data.movieId,
+//             movieName: data.title,
+//             movieYear: year,
+//             movieGenre: data.genres
+//         });
+//         // console.log(data);
+//         createDOC(writeObj);
 //     })
-//     .on("end", () => {
-//         console.log("----Movies Tag written!----")
+//     .on("end", function () {
+//         console.log("----Movies ID, Movies Name, Movies Year and Movies Genre written!----");
 //     });
+
+
+// 
+// For tags.csv file [updating tags in documents in database]
+// 
+Reading tags CSV file in Stream
+var CSVstream = fs.createReadStream("./dataset/tags.csv");
+
+
+// Writing data to database
+csv.parseStream(CSVstream, {
+        headers: true
+    })
+    .on("data", function (data) {
+        data.movieId = data.movieId * 1;
+        updateDoc(data);
+    })
+    .on("end", () => {
+        console.log("----Movies Tag written!----")
+    });
