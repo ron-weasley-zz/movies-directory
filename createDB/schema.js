@@ -15,7 +15,8 @@ const schema = mongoose.Schema({
     movieGenre: {
         type: [String]
     },
-    tags: [String]
+    tags: [String],
+    ratings: [Number]
 });
 
 module.exports = schema;

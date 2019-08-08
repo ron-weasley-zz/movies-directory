@@ -34,7 +34,7 @@ const createDOC = async function (data) {
     })
 };
 const updatetagsDOC = async function (data) {
-    moviedb.updateOne({
+    await moviedb.updateOne({
         movieID: data.movieId
     }, {
         $push: {
@@ -44,7 +44,25 @@ const updatetagsDOC = async function (data) {
         if (err !== null) {
             console.log(err);
             fs.appendFile('error-log.txt',
-                `updateDoc Function Error: ${err} \n ${createdDoc}\n\n\n\n`,
+                `updateDoc Function Error: ${err} \n ${updatedDoc}\n\n\n\n`,
+                function (err) {
+                    console.log('Error Saved!');
+                });
+        }
+    });
+};
+const updateratingDOC = async function (data) {
+    await moviedb.updateOne({
+        movieID: data.movieId
+    }, {
+        $push: {
+            ratings: data.rating
+        }
+    }, (err, updatedDoc) => {
+        if (err !== null) {
+            console.log(err);
+            fs.appendFile('error-log.txt',
+                `updateDoc Function Error: ${err} \n ${updatedDoc}\n\n\n\n`,
                 function (err) {
                     console.log('Error Saved!');
                 });
@@ -54,6 +72,7 @@ const updatetagsDOC = async function (data) {
 
 
 // // Database Writer
+//
 // let year = " ";
 // csv.fromPath("./dataset/movies.csv", {
 //         headers: true
@@ -91,5 +110,16 @@ const updatetagsDOC = async function (data) {
 //         updatetagsDOC(data);
 //     })
 //     .on("end", () => {
-//         console.log("----Movies Tag written!----")
+//         console.log("----Movies Tag written!----");
 //     });
+
+csv.fromPath("./dataset/ratings.csv", {
+        headers: true
+    })
+    .on("data", function (data) {
+        console.log(`${data.userId} - ${data.movieId}`);
+        updateratingDOC(data);
+    })
+    .on("end", () => {
+        console.log("----Movies Rating written!----");
+    });
