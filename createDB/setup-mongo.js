@@ -16,45 +16,46 @@ mongoose.connect(process.env.DATABASE_LOCAL, {
     useFindAndModify: false
 }).then(() => console.log('Database connected!'));
 
-
 // Collection and model defined here 
 const moviedb = mongoose.model('moviedb', schema, 'Actors');
 
 
-//Function to create Document in Database
-var createDOC = async (data) => {
-    const dat = await moviedb.create(data, (err, createdDoc) => {
+// Data loggers
+const createDOC = async function (data) {
+    await moviedb.create(data, (err, createdDoc) => {
         if (err !== null) {
             console.log(err);
-            fs.appendFile('error-log.txt', `${err} \n ${createdDoc}\n\n\n\n`, function (err) {
-                console.log('Error Saved!');
-            });
+            fs.appendFile('error-log.txt',
+                `createDoc Function Error: ${err} \n ${createdDoc}\n\n\n\n`,
+                function (err) {
+                    console.log('Error Saved!');
+                });
         }
-    });
+    })
 };
-//Function to update document in database
-var updateDoc = async (data) => {
-    const dat = await moviedb.updateOne({
+const updatetagsDOC = async function (data) {
+    moviedb.updateOne({
         movieID: data.movieId
     }, {
         $push: {
             tags: data.tag
         }
     }, (err, updatedDoc) => {
-        console.log(err);
+        if (err !== null) {
+            console.log(err);
+            fs.appendFile('error-log.txt',
+                `updateDoc Function Error: ${err} \n ${createdDoc}\n\n\n\n`,
+                function (err) {
+                    console.log('Error Saved!');
+                });
+        }
     });
 };
 
 
-// 
-// For movies.csv file [setting up database for the first time]
-//
-// //Reading movies CSV file in Stream
-// var CSVstream = fs.createReadStream("./dataset/movies.csv");
-
-// //Writing data to database
-// var year = " ";
-// csv.fromStream(CSVstream, {
+// // Database Writer
+// let year = " ";
+// csv.fromPath("./dataset/movies.csv", {
 //         headers: true
 //     })
 //     .on("data", function (data) {
@@ -76,29 +77,19 @@ var updateDoc = async (data) => {
 //             movieYear: year,
 //             movieGenre: data.genres
 //         });
-//         // console.log(data);
 //         createDOC(writeObj);
 //     })
 //     .on("end", function () {
 //         console.log("----Movies ID, Movies Name, Movies Year and Movies Genre written!----");
 //     });
 
-
-// 
-// For tags.csv file [updating tags in documents in database]
-// 
-Reading tags CSV file in Stream
-var CSVstream = fs.createReadStream("./dataset/tags.csv");
-
-
-// Writing data to database
-csv.parseStream(CSVstream, {
-        headers: true
-    })
-    .on("data", function (data) {
-        data.movieId = data.movieId * 1;
-        updateDoc(data);
-    })
-    .on("end", () => {
-        console.log("----Movies Tag written!----")
-    });
+// csv.fromPath("./dataset/tags.csv", {
+//         headers: true
+//     })
+//     .on("data", function (data) {
+//         data.movieId = data.movieId * 1;
+//         updatetagsDOC(data);
+//     })
+//     .on("end", () => {
+//         console.log("----Movies Tag written!----")
+//     });
