@@ -21,8 +21,8 @@ const moviedb = mongoose.model('moviedb', schema, 'Actors');
 
 
 // Data loggers
-const createDOC = async function (data) {
-    await moviedb.create(data, (err, createdDoc) => {
+const createDOC = function (data) {
+    moviedb.create(data, (err, createdDoc) => {
         if (err !== null) {
             console.log(err);
             fs.appendFile('error-log.txt',
@@ -33,8 +33,8 @@ const createDOC = async function (data) {
         }
     })
 };
-const updatetagsDOC = async function (data) {
-    await moviedb.updateOne({
+const updatetagsDOC = function (data) {
+    moviedb.updateOne({
         movieID: data.movieId
     }, {
         $push: {
@@ -51,12 +51,31 @@ const updatetagsDOC = async function (data) {
         }
     });
 };
-const updateratingDOC = async function (data) {
-    await moviedb.updateOne({
+const updateratingDOC = function (data) {
+    moviedb.updateOne({
         movieID: data.movieId
     }, {
         $push: {
             ratings: data.rating
+        }
+    }, (err, updatedDoc) => {
+        if (err !== null) {
+            console.log(err);
+            fs.appendFile('error-log.txt',
+                `updateDoc Function Error: ${err} \n ${updatedDoc}\n\n\n\n`,
+                function (err) {
+                    console.log('Error Saved!');
+                });
+        }
+    });
+};
+const updateimdbidDOC = function (data) {
+    moviedb.updateOne({
+        movieID: data.movieId
+    }, {
+        otherDB: {
+            imdbID: data.imdbId,
+            tmdbID: data.tmdbId
         }
     }, (err, updatedDoc) => {
         if (err !== null) {
@@ -106,20 +125,30 @@ const updateratingDOC = async function (data) {
 //         headers: true
 //     })
 //     .on("data", function (data) {
-//         data.movieId = data.movieId * 1;
 //         updatetagsDOC(data);
 //     })
 //     .on("end", () => {
 //         console.log("----Movies Tag written!----");
 //     });
 
-csv.fromPath("./dataset/ratings.csv", {
-        headers: true
-    })
-    .on("data", function (data) {
-        console.log(`${data.userId} - ${data.movieId}`);
-        updateratingDOC(data);
-    })
-    .on("end", () => {
-        console.log("----Movies Rating written!----");
-    });
+// csv.fromPath("./dataset/ratings.csv", {
+//         headers: true
+//     })
+//     .on("data", function (data) {
+//         console.log(`${data.userId} - ${data.movieId}`);
+//         data.rating = data.rating * 1;
+//         updateratingDOC(data);
+//     })
+//     .on("end", () => {
+//         console.log("----Movies Rating written!----");
+//     });
+
+// csv.fromPath("./dataset/links.csv", {
+//         headers: true
+//     })
+//     .on("data", function (data) {
+//         updateimdbidDOC(data);
+//     })
+//     .on("end", () => {
+//         console.log("----Movies imdbID written!----");
+//     });

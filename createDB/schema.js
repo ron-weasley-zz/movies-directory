@@ -16,7 +16,11 @@ const schema = mongoose.Schema({
         type: [String]
     },
     tags: [String],
-    ratings: [Number]
+    ratings: [Number],
+    otherDB: {
+        imdbID: String,
+        tmdbID: String
+    }
 });
 
 module.exports = schema;
