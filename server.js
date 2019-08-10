@@ -11,5 +11,3 @@ mongoose
   })
   .then(() => console.log('DB connection successful!'));
 
-
-
