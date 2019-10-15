@@ -1,0 +1,8 @@
+extends base
+
+block content
+    form.searchb_form
+            input.searchb(type="text" autofocus placeholder="No Country for Old Men...")
+    .not_found
+        .message1  #{404 || message1}
+        .message2 #{'Page Not Found!' || message2}

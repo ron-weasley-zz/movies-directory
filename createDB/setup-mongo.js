@@ -1,3 +1,9 @@
+//  Other way of writing ratings
+//  Now - [A, B, C, D, E]
+//  The Other Way - [X, n] 
+//  X = A + B + C + D + E    n = now.length()
+//  X_new - (X + R)/(n + 1)
+
 const fs = require('fs');
 const mongoose = require('mongoose');
 const csv = require('fast-csv');
@@ -6,23 +12,35 @@ const dotenv = require('dotenv');
 const schema = require('./schema');
 
 dotenv.config({
-    path: "./../config.env"
+    path: "./config.env"
 });
 
 //Database Connection
-mongoose.connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-}).then(() => console.log('Database connected!'));
+mongoose
+    .connect(process.env.DATABASE_LOCAL, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false
+    })
+    .then(() => {
+        console.log('DB connection successful!');
+        (async () => {
+            await movieWrite();
+            await tagsWrite();
+            await ratingsWrite();
+            await linksWrite();
+        })().catch(err => {
+            console.error(err);
+        });
+    });
 
-// Collection and model defined here 
-const moviedb = mongoose.model('moviedb', schema, 'Actors');
+// Collection and model defined here (name of the collection- Actors)
+const Movies = mongoose.model('Movies', schema, 'Movies');
 
 
 // Data loggers
-const createDOC = function (data) {
-    moviedb.create(data, (err, createdDoc) => {
+const createDOC = async (data) => {
+    await Movies.create(data, (err, createdDoc) => {
         if (err !== null) {
             console.log(err);
             fs.appendFile('error-log.txt',
@@ -33,8 +51,8 @@ const createDOC = function (data) {
         }
     })
 };
-const updatetagsDOC = function (data) {
-    moviedb.updateOne({
+const updatetagsDOC = async (data) => {
+    await Movies.updateOne({
         movieID: data.movieId
     }, {
         $push: {
@@ -51,8 +69,8 @@ const updatetagsDOC = function (data) {
         }
     });
 };
-const updateratingDOC = function (data) {
-    moviedb.updateOne({
+const updateratingDOC = async (data) => {
+    await Movies.updateOne({
         movieID: data.movieId
     }, {
         $push: {
@@ -69,8 +87,8 @@ const updateratingDOC = function (data) {
         }
     });
 };
-const updateimdbidDOC = function (data) {
-    moviedb.updateOne({
+const updateimdbidDOC = async (data) => {
+    await Movies.updateOne({
         movieID: data.movieId
     }, {
         otherDB: {
@@ -91,64 +109,71 @@ const updateimdbidDOC = function (data) {
 
 
 // // Database Writer
-//
-// let year = " ";
-// csv.fromPath("./dataset/movies.csv", {
-//         headers: true
-//     })
-//     .on("data", function (data) {
-//         data.movieId = data.movieId * 1;
-//         if (data.title.substr(-1) === ")" && data.title.substr(-6, 1) === "(") {
-//             year = data.title.slice(-5, -1);
-//             data.title = data.title.slice(0, -7);
-//         } else {
-//             year = "NA";
-//         }
-//         if (data.genres === "(no genres listed)") {
-//             data.genres = ["NA"];
-//         } else {
-//             data.genres = data.genres.split("|");
-//         }
-//         var writeObj = new Object({
-//             movieID: data.movieId,
-//             movieName: data.title,
-//             movieYear: year,
-//             movieGenre: data.genres
-//         });
-//         createDOC(writeObj);
-//     })
-//     .on("end", function () {
-//         console.log("----Movies ID, Movies Name, Movies Year and Movies Genre written!----");
-//     });
+let year = " ";
+const movieWrite = async () => {
+    csv.fromPath("./createDB/dataset/movies.csv", {
+            headers: true
+        })
+        .on("data", async (data) => {
+            data.movieId = data.movieId * 1;
+            if (data.title.substr(-1) === ")" && data.title.substr(-6, 1) === "(") {
+                year = data.title.slice(-5, -1);
+                data.title = data.title.slice(0, -7);
+            } else {
+                year = "NA";
+            }
+            if (data.genres === "(no genres listed)") {
+                data.genres = ["NA"];
+            } else {
+                data.genres = data.genres.split("|");
+            }
+            var writeObj = new Object({
+                movieID: data.movieId,
+                movieName: data.title,
+                movieYear: year,
+                movieGenre: data.genres
+            });
+            await createDOC(writeObj);
+        })
+        .on("end", function () {
+            console.log("----Movies ID, Movies Name, Movies Year and Movies Genre written!----");
+        });
+};
 
-// csv.fromPath("./dataset/tags.csv", {
-//         headers: true
-//     })
-//     .on("data", function (data) {
-//         updatetagsDOC(data);
-//     })
-//     .on("end", () => {
-//         console.log("----Movies Tag written!----");
-//     });
+const tagsWrite = async () => {
+    csv.fromPath("./createDB/dataset/tags.csv", {
+            headers: true
+        })
+        .on("data", async (data) => {
+            await updatetagsDOC(data);
+        })
+        .on("end", () => {
+            console.log("----Movies Tag written!----");
+        })
+};
 
-// csv.fromPath("./dataset/ratings.csv", {
-//         headers: true
-//     })
-//     .on("data", function (data) {
-//         console.log(`${data.userId} - ${data.movieId}`);
-//         data.rating = data.rating * 1;
-//         updateratingDOC(data);
-//     })
-//     .on("end", () => {
-//         console.log("----Movies Rating written!----");
-//     });
+const ratingsWrite = async () => {
+    csv.fromPath("./createDB/dataset/ratings.csv", {
+            headers: true
+        })
+        .on("data", async (data) => {
+            // console.log(`${data.userId} - ${data.movieId}`);
+            data.rating = data.rating * 1;
+            await updateratingDOC(data);
+        })
+        .on("end", () => {
+            console.log("----Movies Rating written!----");
+        })
+};
 
-// csv.fromPath("./dataset/links.csv", {
-//         headers: true
-//     })
-//     .on("data", function (data) {
-//         updateimdbidDOC(data);
-//     })
-//     .on("end", () => {
-//         console.log("----Movies imdbID written!----");
-//     });
+const linksWrite = async () => {
+    csv.fromPath("./createDB/dataset/links.csv", {
+            headers: true
+        })
+        .on("data", async (data) => {
+            await updateimdbidDOC(data);
+        })
+        .on("end", () => {
+            console.log("----Movies imdbID written!----");
+        })
+};

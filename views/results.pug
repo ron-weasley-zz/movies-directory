@@ -1,0 +1,48 @@
+extends base
+
+mixin movieResultBlock(movies)
+    each movie, index in movies
+        if movie.otherDB.imdbID === null
+            movie.otherDB.imdbID = NA
+        .result_row
+            .result_card
+                .result_card_img_ele
+                    img.result_card_img(src= './img/infinity-war.jpg')
+                .result_card_details
+                    .result_card_name= movie.movieName
+                    .result_card_year= movie.movieYear
+                    .result_card_genre Genre: 
+                        each genre, index in movie.movieGenre
+                            if movie.movieGenre[index+1]
+                                | #{genre}, 
+                            else
+                                | #{genre}.
+                    .result_card_tags Tags: 
+                        if movie.tags.length === 0
+                            | NA
+                        else
+                            each tag, index in movie.tags
+                                if movie.tags[index+1]
+                                    | #{tag}, 
+                                else
+                                    | #{tag}.
+                    .result_card_imdb IMDb ID: 
+                        if !movie.otherDB.imdbID
+                            | NA
+                        else
+                            | #{movie.otherDB.imdbID}
+                    .result_card_tmdb TMDb ID: 
+                        if !movie.otherDB.tmdbID
+                            | NA
+                        else
+                            | #{movie.otherDB.tmdbID}
+            
+
+block content
+    form.searchb_form
+        input.searchb(type="text" autofocus placeholder=`${searchedFor}...`)
+
+    .search_for
+        .search_for_text Search results for #{searchedFor}...
+
+    +movieResultBlock(movies)

@@ -1,0 +1,56 @@
+doctype html
+html
+    head
+        meta(name='viewport' content='width=device-width')
+        meta(http-equiv='Content-Type' content='text/html; charset=UTF-8')
+        title Welcome to Movies Directory
+        include _style
+    body
+        span.preheader Welcome to Movies Directory
+        table.body(role='presentation' border='0' cellpadding='0' cellspacing='0')
+        tr
+            td &nbsp;
+            td.container
+            .content
+                // START CENTERED WHITE CONTAINER
+                table.main(role='presentation')
+                // START MAIN CONTENT AREA
+                tr
+                    td.wrapper
+                    table(role='presentation' border='0' cellpadding='0' cellspacing='0')
+                        tr
+                        td
+                            p Hi there,
+                            p
+                            | Thanks for trying Movies Directory.
+                            table.btn.btn-primary(role='presentation' border='0' cellpadding='0' cellspacing='0')
+                            tbody
+                                tr
+                                td(align='left')
+                                    table(role='presentation' border='0' cellpadding='0' cellspacing='0')
+                                    tbody
+                                        tr
+                                        td
+                                            a(href='https://github.com/ron-weasley' target='_blank') Visit
+                            p
+                            | Search for Movies. Review and rate them. Check reviews and ratings by our users and critics.
+                            p Good luck!
+                // END MAIN CONTENT AREA
+                // END CENTERED WHITE CONTAINER
+                // START FOOTER
+                .footer
+                table(role='presentation' border='0' cellpadding='0' cellspacing='0')
+                    tr
+                    td.content-block
+                        span.apple-link AEY Inc, Miami, FL
+                        br
+                        |  Don&apos;t like these emails? 
+                        a(href='https://github.com/ron-weasley') Unsubscribe
+                        | .
+                    tr
+                    td.content-block.powered-by
+                        | Powered by 
+                        a(href='https://github.com/ron-weasley') AEY Inc.
+                        | .
+                // END FOOTER
+            td &nbsp;

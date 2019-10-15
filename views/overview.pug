@@ -1,0 +1,30 @@
+extends base
+
+mixin movieCard(movie)
+  .grid__item
+        .card(style= `background-image: url('../img/${movie.image}`)
+            .card__img
+                .date
+                    span.day= movie.day
+                    span.month= movie.month
+                    span.year= movie.year
+            .card__content
+                h1.card__header= movie.movie
+                p.card__text 
+                    | #{movie.line}
+
+block content
+    form.searchb_form
+        input.searchb(type="text" autofocus placeholder="No Country for Old Men...")
+    
+    .movie_cards
+        .grid
+            +movieCard(movies[0])
+            +movieCard(movies[1])
+            +movieCard(movies[2])
+    
+    .movie_cards
+        .grid
+            +movieCard(movies[3])
+            +movieCard(movies[4])
+            +movieCard(movies[5])

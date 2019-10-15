@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    block head
+      meta(charset='UTF-8')
+      meta(name='viewport' content='width=device-width, initial-scale=1.0')
+      link(rel='stylesheet' href='/css/index.css')
+      link(href='https://fonts.googleapis.com/css?family=Source+Code+Pro:500&display=swap' rel='stylesheet')
+      link(rel='shortcut icon' type='image/png' href='/img/not_found.png')
+      title #{title}
+
+  body#home.home_block
+  
+    #jsi-hex-container.container
+  
+    // HEADER
+    include _header
+
+    // CONTENT
+    block content
+      h1 This is a placeholder heading
+
+    // FOOTER 
+    include _footer
+
+    //- script(src='./js/jquery-3.4.1.min.js')
+    //- script(src='./js/script.js')
+    script(src='./js/index.js')

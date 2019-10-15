@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const schema = new mongoose.Schema({
+const movieSchema = new mongoose.Schema({
     movieID: {
         type: Number,
         required: [true, 'Movie ID not present!']
@@ -23,4 +23,7 @@ const schema = new mongoose.Schema({
     }
 });
 
-module.exports = schema;
+// name of the collection- Movies
+const Movie = mongoose.model('Movie', movieSchema, 'Movies');
+
+module.exports = Movie;

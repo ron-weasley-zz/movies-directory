@@ -1,0 +1,50 @@
+[
+    {
+        "movie": "The Dark Knight",
+        "image": "the-dark-knight.jpg",
+        "day": "18",
+        "month": "July",
+        "year": "2008",
+        "line": "When the menace known as The Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham."
+    },
+    {
+        "movie": "No Country For Old Men",
+        "image": "no-country-for-old-men.jpg",
+        "day": "21",
+        "month": "Nov",
+        "year": "2007",
+        "line": "Violence and mayhem ensue after a hunter stumbles upon a drug deal gone wrong and more than two million dollars in cash near the Rio Grande."
+    },
+    {
+        "movie": "Avengers: Infinity War",
+        "image": "infinity-war.jpg",
+        "day": "27",
+        "month": "Apr",
+        "year": "2018",
+        "line": "The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe."
+    },
+    {
+        "movie": "The Lord of the Rings",
+        "image": "lord-of-the-rings.jpg",
+        "day": "17",
+        "month": "Dec",
+        "year": "2003",
+        "line": "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring."
+    },
+    {
+        "movie": "Venom",
+        "image": "venom-2018.jpg",
+        "day": "5",
+        "month": "Oct",
+        "year": "2019",
+        "line": "A failed reporter is bonded to an alien entity, one of many symbiotes who have invaded Earth. But the being takes a liking to Earth and decides to protect it."
+    },
+    {
+        "movie": "The Matrix",
+        "image": "the-matrix.jpg",
+        "day": "32",
+        "month": "Mar",
+        "year": "1999",
+        "line": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers."
+    }
+]
